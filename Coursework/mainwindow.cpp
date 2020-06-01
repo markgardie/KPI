@@ -31,33 +31,40 @@ void MainWindow::on_AddButton_clicked()
 {
     studnum++;
     string name = (ui->NameEdit->text()).toStdString();
-    string m1 = (ui->M1Edit->text()).toStdString();
-    string m2 = (ui->M2Edit->text()).toStdString();
-    string m3 = (ui->M3Edit->text()).toStdString();
-    string m4 = (ui->M4Edit->text()).toStdString();
-    string m5 = (ui->M5Edit->text()).toStdString();
-    string budget = (ui->BudgetEdit->text()).toStdString();
+    int marks [5];
     double coef = (ui->CoefEdit->text()).toDouble();
+    bool budget;
 
-    if (budget == "так" || budget == "ні") {
-        g.SetAtributes(studindex, name, m1, m2, m3, m4, m5, budget, coef, studnum);
-        studindex++;
-        QString inputlist = ui->NameEdit->text() + "," +
-                ui->M1Edit->text() + "," +
-                ui->M2Edit->text() + "," +
-                ui->M3Edit->text() + "," +
-                ui->M4Edit->text() + "," +
-                ui->M5Edit->text() + "," +
-                ui->BudgetEdit->text();
+    marks[0] = (ui->M1Edit->text()).toInt();
+    marks[1] = (ui->M2Edit->text()).toInt();
+    marks[2] = (ui->M3Edit->text()).toInt();
+    marks[3] = (ui->M4Edit->text()).toInt();
+    marks[4] = (ui->M5Edit->text()).toInt();
 
-
-        ui->InputList->setText(inputlist + "\n" + temp);
-        temp = inputlist + "\n" + temp;
+    if (ui->BudgetEdit->text() == "так") {
+        budget = true;
+    }
+    else if (ui->BudgetEdit->text() == "ні") {
+        budget = false;
     }
     else {
         QMessageBox::critical(this, "Помилка", "Введіть так або ні");
     }
 
+    g.SetAtributes(studindex, name, marks, coef, budget, studnum);
+
+    studindex++;
+    QString inputlist = ui->NameEdit->text() + "," +
+            ui->M1Edit->text() + "," +
+            ui->M2Edit->text() + "," +
+            ui->M3Edit->text() + "," +
+            ui->M4Edit->text() + "," +
+            ui->M5Edit->text() + "," +
+            ui->BudgetEdit->text();
+
+
+    ui->InputList->setText(temp + inputlist + "\n");
+    temp = temp + inputlist + "\n";
 }
 
 void MainWindow::on_ResetButton_clicked()

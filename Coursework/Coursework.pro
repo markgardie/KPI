@@ -17,13 +17,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Group.cpp \
-    Student.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     Group.h \
+    Human.h \
     Student.h \
+    Subject.h \
+    Teacher.h \
     mainwindow.h
 
 FORMS += \

@@ -17,24 +17,18 @@ Group::~Group()
 }
 
 
-void Group::SetAtributes(int studindex,
-                         string name,
-                         string m1,
-                         string m2,
-                         string m3,
-                         string m4,
-                         string m5,
-                         string ifbudget,
+void Group::SetAtributes(int studindex, string name,
+                         int m [],
                          double coef,
+                         bool budget,
                          int studnum)
 {
-    list[studindex].SetN(name);
-    list[studindex].SetM1(m1);
-    list[studindex].SetM2(m2);
-    list[studindex].SetM3(m3);
-    list[studindex].SetM4(m4);
-    list[studindex].SetM5(m5);
-    list[studindex].SetIB(ifbudget);
+
+    for (int i = 0; i < 5; i++) {
+        list[studindex].marks[i] = m[i];
+    }
+    list[studindex].name = name;
+    list[studindex].ifbudget = budget;
     this->coef = coef;
     this->studnum = studnum;
 }
@@ -43,14 +37,14 @@ string Group::calcavg()
 {
 	for (int i = 0; i < studnum; i++)
 	{
-		list[i].SetAv((stod(list[i].GetM1()) + stod(list[i].GetM2()) + stod(list[i].GetM3()) + stod(list[i].GetM4()) + stod(list[i].GetM5())) / 5);  //преобразовываем string в int и расчитываем среднее арифметическое
+        list[i].avgmark = (list[i].marks[0] +  list[i].marks[1] +  list[i].marks[2]+  list[i].marks[3]+  list[i].marks[4]) / 5;  //преобразовываем string в int и расчитываем среднее арифметическое
 	}
 
     string temp = "";
     string s;
     for (int i = 0; i < studnum; i++)
     {
-        s = list[i].GetN() + "," + to_string(list[i].GetAv()) + "\n" + temp;
+        s = temp + list[i].name + "," + to_string(list[i].avgmark) + "\n";
         temp = s;
     }
 
@@ -59,32 +53,32 @@ string Group::calcavg()
 
 string Group::sort()
 {
-	
-    for (int i = 0; i < studnum - 1; i++) //отвечат за отсортированную часть
+    int max = 0; //переменная сохраняет индекс максимального элемента
+    double temp = 0;
+    for (int i = 0; i < studnum; i++) //отвечат за отсортированную часть
 	{
-		int max = i; //переменная сохраняет индекс максимального элемента
-        for (int j = i+1; j < studnum; j++) //внутренний цикл отвечает за неотсортированную часть
+        max = i;
+        for (int j = i; j < studnum; j++) //внутренний цикл отвечает за неотсортированную часть
 		{
-			if (list[j].GetAv() > list[max].GetAv()) //если находится элемент больше текущего
+            if (list[j].avgmark > list[max].avgmark) //если находится элемент больше текущего
 			{
-				max = j; //то меняем индекс
+                max = j; //то меняем индекс
 			}
 		}
-		if (max != i) //если последний индекс отсортированной части не совпадает с индексом максимального элемента
-		{
-			double temp = list[i].GetAv(); //меняем их местами
-			list[i].SetAv(list[max].GetAv());
-			list[max].SetAv(temp);
-		}
-	}
+
+        temp = list[i].avgmark; //меняем их местами
+        list[i].avgmark = list[max].avgmark;
+        list[max].avgmark = temp;
+
+    }
 
 
-    string temp = "";
+    string temps = "";
     string s;
-    for (int i = studnum-1; i > 0; i--)
+    for (int i = 0; i < studnum; i++)
     {
-        s = list[i].GetN() + "," + to_string(list[i].GetAv()) + "," + list[i].GetIfBud() + "\n" + temp;
-        temp = s;
+        s = temps +list[i].name + "," + to_string(list[i].avgmark) + "," + to_string(list[i].ifbudget) + "\n";
+        temps = s;
     }
 
     return s;
@@ -97,16 +91,16 @@ string Group::grants()
 
     string temp = "";
     string s;
-    for (int i = grantnum - 1; i > 0; i--)
+    for (int i = 0; i < grantnum; i++)
 	{
-        if (list[i].GetIfBud() == "ні") //если студент не бюджетник
+        if (!list[i].ifbudget) //если студент не бюджетник
 		{
-            i--; //то пропускаем его и переходим к следующему
+            i++; //то пропускаем его и переходим к следующему
 			grantnum++; //и увеличиваем переменную, чтобы набрать нужно кол-во студентов
 		}
         else {
 
-            s = list[i].GetN() + "," + to_string(list[i].GetAv()) + "\n" + temp;
+            s = temp + list[i].name + "," + to_string(list[i].avgmark) + "\n";
             temp = s;
         }
     }

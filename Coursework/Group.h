@@ -13,7 +13,7 @@ public:
     Group(int);
 	~Group();
 
-    void SetAtributes(int, string, string, string, string, string, string, string, double, int);
+    void SetAtributes(int, string, int[], double, bool, int);
 
 
     string calcavg();
