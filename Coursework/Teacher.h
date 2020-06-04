@@ -3,11 +3,13 @@
 #include <iostream>
 #include "Human.h"
 #include "Subject.h"
+#include <list>
+#include <iterator>
 
 using namespace std;
 
 struct Teacher:Human {
-    Subject *subjects;
+    list<Subject> subjects;
 };
 
 

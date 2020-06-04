@@ -1,24 +1,27 @@
 #pragma once
 #include "Student.h"
 #include <iomanip>
+#include <list>
+#include <iterator>
 
 class Group
 {
-	Student *list;
+    list<Student> students;
 	int studnum;
 	double coef;
+    list<Student>:: iterator it1;
+    list<int>:: iterator it2;
 	
 
 public:
     Group(int);
-	~Group();
 
-    void SetAtributes(int, string, int[], double, bool, int);
+    void SetAtributes(string, list<int>, double, bool, int);
 
 
     string calcavg();
-    string sort(); //сортируем список по убыванию средних оценок
-    string grants(); //расчитываем списко студентов, которые получают стипендиб и сохраняем в файл
+    string sort();
+    string grants();
 
 };
 
