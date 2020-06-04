@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Group.cpp \
+    Student.cpp \
     main.cpp \
     mainwindow.cpp
 

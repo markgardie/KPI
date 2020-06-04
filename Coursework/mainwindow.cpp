@@ -22,7 +22,6 @@ MainWindow::~MainWindow()
 
 
 int studnum = 0;
-int studindex = 0;
 QString temp = "";
 Group g (30);
 
@@ -31,15 +30,16 @@ void MainWindow::on_AddButton_clicked()
 {
     studnum++;
     string name = (ui->NameEdit->text()).toStdString();
-    int marks [5];
+    list<int> marks;
     double coef = (ui->CoefEdit->text()).toDouble();
     bool budget;
 
-    marks[0] = (ui->M1Edit->text()).toInt();
-    marks[1] = (ui->M2Edit->text()).toInt();
-    marks[2] = (ui->M3Edit->text()).toInt();
-    marks[3] = (ui->M4Edit->text()).toInt();
-    marks[4] = (ui->M5Edit->text()).toInt();
+    marks.push_back((ui->M1Edit->text()).toInt());
+    marks.push_back((ui->M2Edit->text()).toInt());
+    marks.push_back((ui->M3Edit->text()).toInt());
+    marks.push_back((ui->M4Edit->text()).toInt());
+    marks.push_back((ui->M5Edit->text()).toInt());
+
 
     if (ui->BudgetEdit->text() == "так") {
         budget = true;
@@ -51,9 +51,9 @@ void MainWindow::on_AddButton_clicked()
         QMessageBox::critical(this, "Помилка", "Введіть так або ні");
     }
 
-    g.SetAtributes(studindex, name, marks, coef, budget, studnum);
+    g.SetAtributes(name, marks, coef, budget, studnum);
 
-    studindex++;
+
     QString inputlist = ui->NameEdit->text() + "," +
             ui->M1Edit->text() + "," +
             ui->M2Edit->text() + "," +
@@ -72,7 +72,6 @@ void MainWindow::on_ResetButton_clicked()
     ui->InputList->setText("");
     temp = "";
     studnum = 0;
-    studindex = 0;
 }
 
 void MainWindow::on_RateButton_clicked()
