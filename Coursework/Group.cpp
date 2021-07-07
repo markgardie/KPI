@@ -1,6 +1,7 @@
 #include "Group.h"
 #include <istream>
 #include <sstream>
+#include <iterator>
 
 using namespace std;
 
@@ -8,43 +9,40 @@ using namespace std;
 Group::Group(int studnum)
 {
     this->studnum = studnum;
-    list = new Student[studnum];
-}
 
-Group::~Group()
-{
-	delete[] list;
 }
 
 
-void Group::SetAtributes(int studindex, string name,
-                         int m [],
+void Group::SetAtributes(string name,
+                         list<int> marks,
                          double coef,
                          bool budget,
                          int studnum)
 {
 
-    for (int i = 0; i < 5; i++) {
-        list[studindex].marks[i] = m[i];
-    }
-    list[studindex].name = name;
-    list[studindex].ifbudget = budget;
+    Student s (marks, name, budget);
+    students.push_back(s);
     this->coef = coef;
     this->studnum = studnum;
+
 }
 
 string Group::calcavg()
 {
-	for (int i = 0; i < studnum; i++)
-	{
-        list[i].avgmark = (list[i].marks[0] +  list[i].marks[1] +  list[i].marks[2]+  list[i].marks[3]+  list[i].marks[4]) / 5;  //преобразовываем string в int и расчитываем среднее арифметическое
-	}
+
+    for (it1 = students.begin(); it1 != students.end(); ++it1) {
+        int sum = 0;
+        for (it2 = it1->marks.begin(); it2 != it1->marks.end(); ++it2) {
+            sum+=(*it2);
+        }
+        it1->avgmark = sum / (*it1).marks.size();
+    }
 
     string temp = "";
     string s;
-    for (int i = 0; i < studnum; i++)
+    for (it1 = students.begin(); it1 != students.end(); ++it1)
     {
-        s = temp + list[i].name + "," + to_string(list[i].avgmark) + "\n";
+        s = temp + (*it1).name + "," + to_string((*it1).avgmark) + "\n";
         temp = s;
     }
 
@@ -53,31 +51,35 @@ string Group::calcavg()
 
 string Group::sort()
 {
-    int max = 0; //переменная сохраняет индекс максимального элемента
+
+
+    list<Student>::iterator max;
+    list<Student>::iterator i;
+    list<Student>::iterator j;
     double temp = 0;
-    for (int i = 0; i < studnum; i++) //отвечат за отсортированную часть
+    for (i = students.begin(); i != students.end(); ++i)
 	{
         max = i;
-        for (int j = i; j < studnum; j++) //внутренний цикл отвечает за неотсортированную часть
+        for (j = i; j != students.end(); ++j)
 		{
-            if (list[j].avgmark > list[max].avgmark) //если находится элемент больше текущего
+            if ((*j).avgmark > (*max).avgmark)
 			{
-                max = j; //то меняем индекс
+                max = j;
 			}
 		}
 
-        temp = list[i].avgmark; //меняем их местами
-        list[i].avgmark = list[max].avgmark;
-        list[max].avgmark = temp;
+        temp = (*i).avgmark;
+        (*i).avgmark = (*max).avgmark;
+        (*max).avgmark = temp;
 
     }
 
 
     string temps = "";
     string s;
-    for (int i = 0; i < studnum; i++)
+    for (i = students.begin(); i != students.end(); ++i)
     {
-        s = temps +list[i].name + "," + to_string(list[i].avgmark) + "," + to_string(list[i].ifbudget) + "\n";
+        s = temps + (*i).name + "," + to_string((*i).avgmark) + "," + to_string((*i).ifbudget) + "\n";
         temps = s;
     }
 
@@ -87,23 +89,24 @@ string Group::sort()
 
 string Group::grants()
 {
-	int grantnum = studnum * coef; //кол-во студентов, которые получают стипендию
+    int grantnum = studnum * coef;
 
     string temp = "";
     string s;
-    for (int i = 0; i < grantnum; i++)
+    for (it1 = students.begin(); it1 != students.end(); ++it1)
 	{
-        if (!list[i].ifbudget) //если студент не бюджетник
+        if (!(*it1).ifbudget)
 		{
-            i++; //то пропускаем его и переходим к следующему
-			grantnum++; //и увеличиваем переменную, чтобы набрать нужно кол-во студентов
+            ++it1;
+            grantnum++;
 		}
+        else if (grantnum == 0) return s;
         else {
 
-            s = temp + list[i].name + "," + to_string(list[i].avgmark) + "\n";
+            s = temp + (*it1).name + "," + to_string((*it1).avgmark) + "\n";
             temp = s;
+            grantnum--;
         }
     }
 
-    return s;
 }
